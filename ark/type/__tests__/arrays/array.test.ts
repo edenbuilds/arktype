@@ -291,6 +291,10 @@ value at [1] must be a string (was a number)`)
 
 		const T = type("number[]")
 		attest(T.allows(foreign)).equals(true)
-		attest(T(foreign)).equals([1, 2, 3])
+		// Don't use .equals on the array itself — foreign-realm arrays have a
+		// different constructor, which attest treats as unequal.
+		const result = T(foreign)
+		attest(result === foreign).equals(true)
+		attest([...(result as number[])]).equals([1, 2, 3])
 	})
 })
