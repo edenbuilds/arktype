@@ -153,11 +153,12 @@ export class ProtoNode extends InternalBasis<Proto.Declaration> {
 		this.requiresInvalidDateCheck ?
 			data => data instanceof Date && data.toString() !== "Invalid Date"
 		: this.isArrayProto ? data => isArray(data)
-		:	data => data instanceof this.proto
+		: data => data instanceof this.proto
 
 	compiledCondition =
-		this.isArrayProto ? `Array.isArray(data)`
-		:	`data instanceof ${this.serializedConstructor}${this.requiresInvalidDateCheck ? ` && data.toString() !== "Invalid Date"` : ""}`
+		this.isArrayProto ? `Array.isArray(data)` : (
+			`data instanceof ${this.serializedConstructor}${this.requiresInvalidDateCheck ? ` && data.toString() !== "Invalid Date"` : ""}`
+		)
 	compiledNegation = `!(${this.compiledCondition})`
 
 	protected innerToJsonSchema(ctx: ToJsonSchema.Context): JsonSchema {
